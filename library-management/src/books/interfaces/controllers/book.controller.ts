@@ -1,13 +1,14 @@
 import { Controller, Get, Param, Post, Body, Put } from '@nestjs/common';
 import { ApiTags } from '@nestjs/swagger';
-import { BookService } from '../../application/services/book.service';
 import { Book } from '../../domain/entities/book.entity';
 import { CreateBookDto } from '../dtos/create-book.dto';
+import { UpdateBookDto } from '../dtos/update-book.dto';
+import { BookRepositoryImpl } from 'src/books/infrastructure/repositories/book.repository.impl';
 
-@Controller('books')
 @ApiTags('books')
+@Controller('books')
 export class BookController {
-  constructor(private readonly bookService: BookService) {}
+  constructor(private readonly bookService: BookRepositoryImpl) {}
 
   @Get()
   async findAll(): Promise<Book[]> {
@@ -31,13 +32,13 @@ export class BookController {
     book.title = createBookDto.title;
     book.author = createBookDto.author;
     book.stock = createBookDto.stock;
-    return this.bookService.create(book);
+    return this.bookService.save(book);
   }
 
   @Put(':id')
   async update(
     @Param('id') id: string,
-    @Body() updateBookDto: CreateBookDto,
+    @Body() updateBookDto: UpdateBookDto,
   ): Promise<Book> {
     const book = await this.bookService.findById(id);
     book.code = updateBookDto.code;

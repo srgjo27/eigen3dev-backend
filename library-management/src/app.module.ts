@@ -1,36 +1,18 @@
 import { Module } from '@nestjs/common';
 import { TypeOrmModule } from '@nestjs/typeorm';
-import { Book } from './books/domain/entities/book.entity';
-import { Member } from './members/domain/entities/member.entity';
-import { BookRepositoryImpl } from './books/infrastructure/repositories/book.repository.impl';
-import { MemberRepositoryImpl } from './members/infrastructure/repositories/member.repository.impl';
-import { BookController } from './books/interfaces/controllers/book.controller';
-import { MemberController } from './members/interfaces/controllers/member.controller';
-import { BookService } from './books/application/services/book.service';
-import { MemberService } from './members/application/services/member.service';
+import { BookModule } from './books/book.module';
+import { MemberModule } from './members/member.module';
 
 @Module({
   imports: [
     TypeOrmModule.forRoot({
       type: 'sqlite',
       database: 'database.sqlite',
-      entities: [Book, Member],
+      entities: [__dirname + '/**/*.entity{.ts,.js}'],
       synchronize: true,
     }),
-    TypeOrmModule.forFeature([Book, Member]),
-  ],
-  controllers: [BookController, MemberController],
-  providers: [
-    BookService,
-    MemberService,
-    {
-      provide: 'BookRepository',
-      useClass: BookRepositoryImpl,
-    },
-    {
-      provide: 'MemberRepository',
-      useClass: MemberRepositoryImpl,
-    },
+    BookModule,
+    MemberModule,
   ],
 })
 export class AppModule {}

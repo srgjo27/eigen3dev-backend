@@ -1,11 +1,11 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, NotFoundException, OnModuleInit } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { Book } from '../../domain/entities/book.entity';
 import { BookRepository } from '../../domain/repositories/book.repository';
 
 @Injectable()
-export class BookRepositoryImpl implements BookRepository {
+export class BookRepositoryImpl implements BookRepository, OnModuleInit {
   constructor(
     @InjectRepository(Book)
     private readonly bookRepository: Repository<Book>,
@@ -60,12 +60,20 @@ export class BookRepositoryImpl implements BookRepository {
     return this.bookRepository.find();
   }
 
-  findById(id: string): Promise<Book> {
-    return this.bookRepository.findOne({ where: { id } });
+  async findById(id: string): Promise<Book> {
+    const book = await this.bookRepository.findOne({ where: { id } });
+    if (!book) {
+      throw new NotFoundException(`Book with id ${id} not found`);
+    }
+    return book;
   }
 
-  findByCode(code: string): Promise<Book> {
-    return this.bookRepository.findOne({ where: { code } });
+  async findByCode(code: string): Promise<Book> {
+    const book = await this.bookRepository.findOne({ where: { code } });
+    if (!book) {
+      throw new NotFoundException(`Book with code ${code} not found`);
+    }
+    return book;
   }
 
   save(book: Book): Promise<Book> {

@@ -1,16 +1,16 @@
 import { Test, TestingModule } from '@nestjs/testing';
-import { BookService } from './book.service';
 import { BookRepository } from '../../domain/repositories/book.repository';
 import { Book } from '../../domain/entities/book.entity';
+import { BookRepositoryImpl } from 'src/books/infrastructure/repositories/book.repository.impl';
 
 describe('BookService', () => {
-  let service: BookService;
+  let service: BookRepositoryImpl;
   let repository: BookRepository;
 
   beforeEach(async () => {
     const module: TestingModule = await Test.createTestingModule({
       providers: [
-        BookService,
+        BookRepositoryImpl,
         {
           provide: 'BookRepository',
           useValue: {
@@ -24,7 +24,7 @@ describe('BookService', () => {
       ],
     }).compile();
 
-    service = module.get<BookService>(BookService);
+    service = module.get<BookRepositoryImpl>(BookRepositoryImpl);
     repository = module.get<BookRepository>('BookRepository');
   });
 

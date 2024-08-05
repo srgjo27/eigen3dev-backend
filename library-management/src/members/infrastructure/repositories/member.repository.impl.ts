@@ -3,12 +3,15 @@ import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { Member } from '../../domain/entities/member.entity';
 import { MemberRepository } from '../../domain/repositories/member.repository';
+import { Book } from 'src/books/domain/entities/book.entity';
 
 @Injectable()
 export class MemberRepositoryImpl implements MemberRepository {
   constructor(
     @InjectRepository(Member)
-    private readonly memberRepository: Repository<Member>,
+    private memberRepository: Repository<Member>,
+    @InjectRepository(Book)
+    private bookRepository: Repository<Book>,
   ) {}
 
   async onModuleInit() {
