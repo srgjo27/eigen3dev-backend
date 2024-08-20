@@ -1,5 +1,14 @@
-import { Controller, Get, Param, Post, Body, Put } from '@nestjs/common';
-import { ApiTags } from '@nestjs/swagger';
+import {
+  Controller,
+  Get,
+  Param,
+  Post,
+  Body,
+  Put,
+  Delete,
+  HttpCode,
+} from '@nestjs/common';
+import { ApiTags, ApiResponse } from '@nestjs/swagger';
 import { Book } from '../../domain/entities/book.entity';
 import { CreateBookDto } from '../dtos/create-book.dto';
 import { UpdateBookDto } from '../dtos/update-book.dto';
@@ -46,5 +55,12 @@ export class BookController {
     book.author = updateBookDto.author;
     book.stock = updateBookDto.stock;
     return this.bookService.update(book);
+  }
+
+  @Delete(':id')
+  @HttpCode(204)
+  @ApiResponse({ status: 204, description: 'Book successfully deleted.' })
+  async delete(@Param('id') id: string): Promise<void> {
+    return this.bookService.delete(id);
   }
 }

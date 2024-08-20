@@ -6,4 +6,5 @@ export interface BookRepository {
   findByCode(code: string): Promise<Book>;
   save(book: Book): Promise<Book>;
   update(book: Book): Promise<Book>;
+  delete(id: string): Promise<void>;
 }

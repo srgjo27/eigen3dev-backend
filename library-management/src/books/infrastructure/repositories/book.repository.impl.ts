@@ -12,6 +12,8 @@ export class BookRepositoryImpl implements BookRepository, OnModuleInit {
   ) {}
 
   async onModuleInit() {
+    await this.bookRepository.clear();
+
     const mockBooks = [
       {
         code: 'JK-45',
@@ -82,5 +84,10 @@ export class BookRepositoryImpl implements BookRepository, OnModuleInit {
 
   update(book: Book): Promise<Book> {
     return this.bookRepository.save(book);
+  }
+
+  async delete(id: string): Promise<void> {
+    const book = await this.findById(id);
+    await this.bookRepository.remove(book);
   }
 }

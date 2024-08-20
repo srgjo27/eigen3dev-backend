@@ -1,20 +1,19 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, OnModuleInit } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { Member } from '../../domain/entities/member.entity';
 import { MemberRepository } from '../../domain/repositories/member.repository';
-import { Book } from 'src/books/domain/entities/book.entity';
 
 @Injectable()
-export class MemberRepositoryImpl implements MemberRepository {
+export class MemberRepositoryImpl implements MemberRepository, OnModuleInit {
   constructor(
     @InjectRepository(Member)
     private memberRepository: Repository<Member>,
-    @InjectRepository(Book)
-    private bookRepository: Repository<Book>,
   ) {}
 
   async onModuleInit() {
+    await this.memberRepository.clear();
+
     const mockMembers = [
       {
         code: 'M001',
